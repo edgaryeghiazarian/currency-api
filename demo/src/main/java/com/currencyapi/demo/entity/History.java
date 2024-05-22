@@ -5,19 +5,21 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "markets")
+@Table(name = "history")
 @Getter
 @Setter
-public class Market {
+public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "history_id")
+    private Currency currency;
 
-    @OneToMany(mappedBy = "market", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Currency> currencyList;
+    private Date date;
 }
