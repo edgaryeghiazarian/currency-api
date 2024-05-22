@@ -6,10 +6,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CurrencyDTO {
-    private long id;
+public class ExchangeRequest {
     private CurrencyEnum name;
-    private double buyRate;
-    private double sellRate;
+    private double amount;
     private long marketId;
 }

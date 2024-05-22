@@ -33,4 +33,11 @@ public class CurrencyController {
         return new ResponseEntity<>(currency.getName() + "\n" + currency.getHistory().get(currency.getHistory().size() - 1).toString(),
                 HttpStatus.OK);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateCurrency(@RequestBody CurrencyDTO currencyDTO) {
+        Currency currency = currencyService.updateCurrency(currencyDTO);
+
+        return new ResponseEntity<>("Updated to: " + currency.getBuyRate() + " - " + currency.getSellRate(), HttpStatus.OK);
+    }
 }

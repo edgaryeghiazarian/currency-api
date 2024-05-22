@@ -1,6 +1,7 @@
 package com.currencyapi.demo.controller;
 
 import com.currencyapi.demo.entity.Market;
+import com.currencyapi.demo.model.ExchangeRequest;
 import com.currencyapi.demo.model.MarketDTO;
 import com.currencyapi.demo.service.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,15 @@ public class MarketController {
     public ResponseEntity<?> getMarket(@PathVariable long id) {
         Market market = marketService.getMarketById(id);
 
-        return new ResponseEntity<>(market.getCurrencyList().get(market.getCurrencyList().size() - 1).toString(),
+        return new ResponseEntity<>(market.getCurrencyList().toString(),
                 HttpStatus.OK);
+    }
+
+    @PostMapping("/exchangeToAmd")
+    public ResponseEntity<?> exchange(@RequestBody ExchangeRequest exchangeRequest) {
+        int exchangeToAMD = (int) marketService.exchangeToAMD(exchangeRequest);
+        exchangeToAMD = (int) (Math.ceil(exchangeToAMD/10.0)*10);
+
+        return new ResponseEntity<>(exchangeToAMD, HttpStatus.OK);
     }
 }

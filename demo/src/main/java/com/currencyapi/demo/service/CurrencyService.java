@@ -10,19 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CurrencyService {
     private final CurrencyRepository currencyRepository;
-    private final HistoryRepository historyRepository;
+    private final HistoryService historyService;
     private final MarketService marketService;
 
     @Autowired
-    public CurrencyService(CurrencyRepository currencyRepository, HistoryRepository historyRepository, MarketService marketService) {
+    public CurrencyService(CurrencyRepository currencyRepository, HistoryService historyService, MarketService marketService) {
         this.currencyRepository = currencyRepository;
-        this.historyRepository = historyRepository;
+        this.historyService = historyService;
         this.marketService = marketService;
     }
 
@@ -36,11 +36,6 @@ public class CurrencyService {
         currency.setMarket(market);
         Currency newCurrency = currencyRepository.save(currency);
 
-        History history = new History();
-        history.setCurrency(newCurrency);
-        history.setDate(new Date());
-        historyRepository.save(history);
-
         return newCurrency;
     }
 
@@ -50,5 +45,18 @@ public class CurrencyService {
             throw new RuntimeException("Currency not found");
         }
         return optionalCurrency.get();
+    }
+
+    @Transactional
+    public Currency updateCurrency(CurrencyDTO currencyDTO) {
+        Market market = marketService.getMarketById(currencyDTO.getMarketId());
+        Currency currency = market.getCurrencyList().stream().filter(c -> c.getName().equals(currencyDTO.getName())).findFirst().get();
+        historyService.addCurrencyToHistory(currency);
+
+        currency.setBuyRate(currencyDTO.getBuyRate());
+        currency.setSellRate(currencyDTO.getSellRate());
+        Currency updatedCurrency = currencyRepository.save(currency);
+
+        return updatedCurrency;
     }
 }

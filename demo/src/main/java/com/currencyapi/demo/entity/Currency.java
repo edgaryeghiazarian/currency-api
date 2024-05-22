@@ -15,7 +15,7 @@ public class Currency {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Currencies name;
+    private CurrencyEnum name;
 
     private double buyRate;
 
@@ -25,7 +25,7 @@ public class Currency {
     @JoinColumn(name = "market_id")
     private Market market;
 
-    @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "currency", cascade = CascadeType.PERSIST)
     private List<History> history;
 
     @Override
