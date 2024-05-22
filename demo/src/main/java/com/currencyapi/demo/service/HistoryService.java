@@ -6,6 +6,7 @@ import com.currencyapi.demo.repository.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -20,7 +21,9 @@ public class HistoryService {
     public History addCurrencyToHistory(Currency currency) {
         History history = new History();
         history.setCurrency(currency);
-        history.setDate(new Date());
+        history.setBuyRate(currency.getBuyRate());
+        history.setSellRate(currency.getSellRate());
+        history.setTimestamp(LocalDateTime.now());
         History newHistory = historyRepository.save(history);
 
         return newHistory;
