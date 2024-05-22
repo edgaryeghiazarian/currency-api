@@ -27,4 +27,13 @@ public class Currency {
 
     @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<History> history;
+
+    @Override
+    public String toString() {
+        return  "currency id=" + id +
+                ", name=" + name +
+                ", buyRate=" + buyRate +
+                ", sellRate=" + sellRate +
+                ", market=" + market.getName() + ".\n";
+    }
 }

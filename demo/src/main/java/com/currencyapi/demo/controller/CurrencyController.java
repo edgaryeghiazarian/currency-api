@@ -6,10 +6,7 @@ import com.currencyapi.demo.service.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/currency")
@@ -27,5 +24,13 @@ public class CurrencyController {
 
         return new ResponseEntity<>("Currency created: " + currency.getName() + " " + ", id: " + currency.getId(),
                 HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getCurrency(@PathVariable long id) {
+        Currency currency = currencyService.getCurrency(id);
+
+        return new ResponseEntity<>(currency.getName() + "\n" + currency.getHistory().get(currency.getHistory().size() - 1).toString(),
+                HttpStatus.OK);
     }
 }

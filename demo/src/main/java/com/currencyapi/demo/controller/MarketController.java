@@ -6,10 +6,7 @@ import com.currencyapi.demo.service.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/market")
@@ -27,5 +24,13 @@ public class MarketController {
 
         return new ResponseEntity<>("Market created: " + market.getName() + ", id:" + market.getId(),
                 HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getMarket(@PathVariable long id) {
+        Market market = marketService.getMarketById(id);
+
+        return new ResponseEntity<>(market.getCurrencyList().get(market.getCurrencyList().size() - 1).toString(),
+                HttpStatus.OK);
     }
 }

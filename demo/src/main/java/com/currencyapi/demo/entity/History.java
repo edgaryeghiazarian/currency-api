@@ -18,8 +18,16 @@ public class History {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "history_id")
+    @JoinColumn(name = "currency_id")
     private Currency currency;
 
     private Date date;
+
+    @Override
+    public String toString() {
+        return "History:" +
+                "id=" + id +
+                ", " + currency +
+                "date=" + date + "\n";
+    }
 }
