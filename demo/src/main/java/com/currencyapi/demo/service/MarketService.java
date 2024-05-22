@@ -45,13 +45,37 @@ public class MarketService {
         return currencyList.stream().filter(c -> c.getName().equals(currencyName)).reduce((first, second) -> second).get();
     }
 
-    public double exchangeToAMD(ExchangeRequest exchangeRequest) {
-        CurrencyEnum name = exchangeRequest.getName();
+    public int exchangeToAMD(ExchangeRequest exchangeRequest) {
+        CurrencyEnum name = exchangeRequest.getFrom();
+        double amount = exchangeRequest.getAmount();
+
+        Currency currentCurrency = getCurrentCurrency(exchangeRequest.getMarketId(), name);
+        int finalAmount = (int) (amount*currentCurrency.getBuyRate());
+        return (int) (Math.ceil(finalAmount/10.0)*10);
+    }
+
+    public double exchangeFromAMD(ExchangeRequest exchangeRequest) {
+        CurrencyEnum name = exchangeRequest.getTo();
         double amount = exchangeRequest.getAmount();
 
         Currency currentCurrency = getCurrentCurrency(exchangeRequest.getMarketId(), name);
 
-        return amount*currentCurrency.getBuyRate();
+        double finalAmount = amount / currentCurrency.getSellRate();
+        return Math.round(finalAmount * 100.0) / 100.0;
+    }
+
+    public double exchangeToAny(ExchangeRequest exchangeRequest) {
+        double amountInAMD = exchangeToAMD(exchangeRequest);
+
+        ExchangeRequest newRequest = new ExchangeRequest();
+        newRequest.setMarketId(exchangeRequest.getMarketId());
+        newRequest.setTo(exchangeRequest.getTo());
+        newRequest.setAmount(amountInAMD);
+
+        double finalAmount = exchangeFromAMD(newRequest);
+
+        return finalAmount;
+
     }
 
     @Transactional

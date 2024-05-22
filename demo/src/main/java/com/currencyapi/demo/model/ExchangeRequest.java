@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ExchangeRequest {
-    private CurrencyEnum name;
+    private CurrencyEnum from;
+    private CurrencyEnum to;
     private double amount;
     private long marketId;
 }

@@ -30,7 +30,7 @@ public class CurrencyController {
     public ResponseEntity<?> getCurrency(@PathVariable long id) {
         Currency currency = currencyService.getCurrency(id);
 
-        return new ResponseEntity<>(currency.getName() + "\n" + currency.getHistory().get(currency.getHistory().size() - 1).toString(),
+        return new ResponseEntity<>(currency.getName() + "\n" + currency.getHistory().toString(),
                 HttpStatus.OK);
     }
 

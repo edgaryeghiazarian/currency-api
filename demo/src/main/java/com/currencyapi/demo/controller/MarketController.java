@@ -35,11 +35,23 @@ public class MarketController {
                 HttpStatus.OK);
     }
 
-    @PostMapping("/exchangeToAmd")
-    public ResponseEntity<?> exchange(@RequestBody ExchangeRequest exchangeRequest) {
-        int exchangeToAMD = (int) marketService.exchangeToAMD(exchangeRequest);
-        exchangeToAMD = (int) (Math.ceil(exchangeToAMD/10.0)*10);
+    @PostMapping("/exchangeToAMD")
+    public ResponseEntity<?> exchangeToAMD(@RequestBody ExchangeRequest exchangeRequest) {
+        int exchangeToAMD = marketService.exchangeToAMD(exchangeRequest);
 
         return new ResponseEntity<>(exchangeToAMD, HttpStatus.OK);
+    }
+
+    @PostMapping("/exchangeFromAMD")
+    public ResponseEntity<?> exchangeFromAMD(@RequestBody ExchangeRequest exchangeRequest) {
+        double exchange = marketService.exchangeFromAMD(exchangeRequest);
+        return new ResponseEntity<>(exchange, HttpStatus.OK);
+    }
+
+    @PostMapping("/exchange")
+    public ResponseEntity<?> exchangeToAny(@RequestBody ExchangeRequest exchangeRequest) {
+        double exchange = marketService.exchangeToAny(exchangeRequest);
+
+        return new ResponseEntity<>(exchange, HttpStatus.OK);
     }
 }
