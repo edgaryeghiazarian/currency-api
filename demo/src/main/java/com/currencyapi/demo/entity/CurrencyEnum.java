@@ -1,6 +1,6 @@
 package com.currencyapi.demo.entity;
 
-public enum Currencies {
+public enum CurrencyENUM {
     AMD,
     USD,
     EUR,
