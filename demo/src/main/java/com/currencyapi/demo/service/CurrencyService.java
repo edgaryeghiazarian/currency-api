@@ -1,16 +1,13 @@
 package com.currencyapi.demo.service;
 
 import com.currencyapi.demo.entity.Currency;
-import com.currencyapi.demo.entity.History;
 import com.currencyapi.demo.entity.Market;
 import com.currencyapi.demo.model.CurrencyDTO;
 import com.currencyapi.demo.repository.CurrencyRepository;
-import com.currencyapi.demo.repository.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,7 +24,7 @@ public class CurrencyService {
     }
 
     @Transactional
-    public Currency addCurrency(CurrencyDTO currencyDTO) {
+    public CurrencyDTO addCurrency(CurrencyDTO currencyDTO) {
         Currency currency = new Currency();
         currency.setName(currencyDTO.getName());
         currency.setBuyRate(currencyDTO.getBuyRate());
@@ -36,10 +33,16 @@ public class CurrencyService {
         currency.setMarket(market);
         Currency newCurrency = currencyRepository.save(currency);
 
-        return newCurrency;
+        return CurrencyDTO.builder()
+                .marketId(market.getId())
+                .name(newCurrency.getName())
+                .sellRate(newCurrency.getSellRate())
+                .buyRate(newCurrency.getBuyRate())
+                .id(newCurrency.getId())
+                .build();
     }
 
-    public Currency getCurrency(long id) {
+    public Currency getCurrencyById(long id) {
         Optional<Currency> optionalCurrency = currencyRepository.findById(id);
         if (optionalCurrency.isEmpty()) {
             throw new RuntimeException("Currency not found");
@@ -47,8 +50,20 @@ public class CurrencyService {
         return optionalCurrency.get();
     }
 
+    public CurrencyDTO getCurrency(long id) {
+        Currency currency = getCurrencyById(id);
+
+        return CurrencyDTO.builder()
+                .id(currency.getId())
+                .buyRate(currency.getBuyRate())
+                .sellRate(currency.getSellRate())
+                .name(currency.getName())
+                .marketId(currency.getMarket().getId())
+                .build();
+    }
+
     @Transactional
-    public Currency updateCurrency(CurrencyDTO currencyDTO) {
+    public CurrencyDTO updateCurrency(CurrencyDTO currencyDTO) {
         Market market = marketService.getMarketById(currencyDTO.getMarketId());
         Currency currency = market.getCurrencyList().stream().filter(c -> c.getName().equals(currencyDTO.getName())).findFirst().get();
         historyService.addCurrencyToHistory(currency);
@@ -57,6 +72,12 @@ public class CurrencyService {
         currency.setSellRate(currencyDTO.getSellRate());
         Currency updatedCurrency = currencyRepository.save(currency);
 
-        return updatedCurrency;
+        return CurrencyDTO.builder()
+                .marketId(updatedCurrency.getId())
+                .name(updatedCurrency.getName())
+                .sellRate(updatedCurrency.getSellRate())
+                .buyRate(updatedCurrency.getBuyRate())
+                .id(updatedCurrency.getId())
+                .build();
     }
 }

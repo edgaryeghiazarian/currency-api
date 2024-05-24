@@ -27,15 +27,4 @@ public class History {
     private double sellRate;
 
     private LocalDateTime timestamp;
-
-    @Override
-    public String toString() {
-        return "History:" +
-                "id=" + id +
-                ", currency=" + currency +
-                ", buyRate=" + buyRate +
-                ", sellRate=" + sellRate +
-                ", timestamp=" + timestamp +
-                '.';
-    }
 }

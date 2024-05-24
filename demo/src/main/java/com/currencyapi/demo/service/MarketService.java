@@ -3,6 +3,7 @@ package com.currencyapi.demo.service;
 import com.currencyapi.demo.entity.CurrencyEnum;
 import com.currencyapi.demo.entity.Currency;
 import com.currencyapi.demo.entity.Market;
+import com.currencyapi.demo.model.CurrencyDTO;
 import com.currencyapi.demo.model.ExchangeRequest;
 import com.currencyapi.demo.model.MarketDTO;
 import com.currencyapi.demo.repository.MarketRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,12 +32,29 @@ public class MarketService {
         return marketOptional.get();
     }
 
+    public MarketDTO getMarket(long id) {
+        Market market = getMarketById(id);
+
+        List<CurrencyDTO> currencyDTOList = new ArrayList<>();
+        for (Currency currency : market.getCurrencyList()) {
+            CurrencyDTO currencyDTO = CurrencyDTO.builder()
+                    .sellRate(currency.getSellRate())
+                    .buyRate(currency.getBuyRate())
+                    .id(currency.getId())
+                    .name(currency.getName())
+                    .marketId(market.getId())
+                    .build();
+            currencyDTOList.add(currencyDTO);
+        }
+        return MarketDTO.builder().id(id).name(market.getName()).currencyDTOList(currencyDTOList).build();
+    }
+
     @Transactional
-    public Market addMarket(MarketDTO marketDTO) {
+    public MarketDTO addMarket(MarketDTO marketDTO) {
         Market market = new Market();
         market.setName(marketDTO.getName());
         Market newMarket = marketRepository.save(market);
-        return newMarket;
+        return MarketDTO.builder().id(newMarket.getId()).name(newMarket.getName()).build();
     }
 
     public Currency getCurrentCurrency(long marketId, CurrencyEnum currencyName) {
@@ -79,11 +98,11 @@ public class MarketService {
     }
 
     @Transactional
-    public Market updateMarket(long marketId, String name, List<Currency> currencyList) {
-        Market market = getMarketById(marketId);
-        market.setName(name);
-        market.setCurrencyList(currencyList);
-        Market updatedMarket = marketRepository.save(market);
-        return updatedMarket;
+    public MarketDTO updateMarket(MarketDTO marketDTO) {
+        //todo not tested
+        Market market = getMarketById(marketDTO.getId());
+        market.setName(market.getName());
+        marketRepository.save(market);
+        return MarketDTO.builder().id(market.getId()).name(market.getName()).build();
     }
 }

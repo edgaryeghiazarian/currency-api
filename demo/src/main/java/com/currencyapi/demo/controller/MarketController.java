@@ -21,20 +21,23 @@ public class MarketController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addMarket(@RequestBody MarketDTO marketDTO) {
-        Market market = marketService.addMarket(marketDTO);
+        MarketDTO market = marketService.addMarket(marketDTO);
 
-        return new ResponseEntity<>("Market created: " + market.getName() + ", id:" + market.getId(),
-                HttpStatus.CREATED);
+        return new ResponseEntity<>(market, HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getMarket(@PathVariable long id) {
-        Market market = marketService.getMarketById(id);
+        MarketDTO market = marketService.getMarket(id);
 
-        return new ResponseEntity<>(market.getCurrencyList().toString(),
-                HttpStatus.OK);
+        return new ResponseEntity<>(market, HttpStatus.OK);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<?> updateMarket(@RequestBody MarketDTO marketDTO) {
+        MarketDTO market = marketService.updateMarket(marketDTO);
+        return new ResponseEntity<>(market, HttpStatus.OK);
+    }
     @PostMapping("/exchangeToAMD")
     public ResponseEntity<?> exchangeToAMD(@RequestBody ExchangeRequest exchangeRequest) {
         int exchangeToAMD = marketService.exchangeToAMD(exchangeRequest);

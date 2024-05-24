@@ -20,24 +20,22 @@ public class CurrencyController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addCurrency(@RequestBody CurrencyDTO currencyDTO) {
-        Currency currency = currencyService.addCurrency(currencyDTO);
+        CurrencyDTO currency = currencyService.addCurrency(currencyDTO);
 
-        return new ResponseEntity<>("Currency created: " + currency.getName() + " " + ", id: " + currency.getId(),
-                HttpStatus.CREATED);
+        return new ResponseEntity<>(currency, HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getCurrency(@PathVariable long id) {
-        Currency currency = currencyService.getCurrency(id);
+        CurrencyDTO currency = currencyService.getCurrency(id);
 
-        return new ResponseEntity<>(currency.getName() + "\n" + currency.getHistory().toString(),
-                HttpStatus.OK);
+        return new ResponseEntity<>(currency, HttpStatus.OK);
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> updateCurrency(@RequestBody CurrencyDTO currencyDTO) {
-        Currency currency = currencyService.updateCurrency(currencyDTO);
+        CurrencyDTO currency = currencyService.updateCurrency(currencyDTO);
 
-        return new ResponseEntity<>("Updated to: " + currency.getBuyRate() + " - " + currency.getSellRate(), HttpStatus.OK);
+        return new ResponseEntity<>(currency, HttpStatus.OK);
     }
 }

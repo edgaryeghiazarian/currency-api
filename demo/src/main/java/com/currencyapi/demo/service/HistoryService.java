@@ -2,20 +2,25 @@ package com.currencyapi.demo.service;
 
 import com.currencyapi.demo.entity.Currency;
 import com.currencyapi.demo.entity.History;
+import com.currencyapi.demo.model.HistoryDTO;
+import com.currencyapi.demo.repository.CurrencyRepository;
 import com.currencyapi.demo.repository.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class HistoryService {
     private final HistoryRepository historyRepository;
+//    private final CurrencyService currencyService;
 
+    private final CurrencyRepository currencyRepository;
     @Autowired
-    public HistoryService(HistoryRepository historyRepository) {
+    public HistoryService(HistoryRepository historyRepository, CurrencyRepository currencyRepository) {
         this.historyRepository = historyRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     public History addCurrencyToHistory(Currency currency) {
@@ -28,4 +33,29 @@ public class HistoryService {
 
         return newHistory;
     }
+
+    public History getHistoryById(long id) {
+        Optional<History> optionalHistory = historyRepository.findById(id);
+        if (optionalHistory.isEmpty()) {
+            throw new RuntimeException("History not found");
+        }
+        return optionalHistory.get();
+    }
+
+
+    public HistoryDTO getHistory(long id) {
+        History history = getHistoryById(id);
+        return HistoryDTO.builder()
+                .buyRate(history.getBuyRate())
+                .sellRate(history.getSellRate())
+                .currencyEnum(history.getCurrency().getName())
+                .marketId(history.getCurrency().getMarket().getId())
+                .id(history.getId())
+                .timestamp(history.getTimestamp()).build();
+    }
+//    public void removeCurrencyFromHistory(long historyId, long currencyId) {
+//        Currency currency = currencyService.getCurrencyById(currencyId);
+//        currency.getHistory().remove(getHistoryById(historyId));
+//        currencyRepository.save(currency);
+//    }
 }
