@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -79,5 +81,16 @@ public class CurrencyService {
                 .buyRate(updatedCurrency.getBuyRate())
                 .id(updatedCurrency.getId())
                 .build();
+    }
+
+    public List<CurrencyDTO> getAllCurrencies() {
+        List<CurrencyDTO> currencyDTOList = new ArrayList<>();
+        List<Currency> currencyList = currencyRepository.findAll();
+        for (Currency currency : currencyList) {
+            CurrencyDTO currencyDTO = getCurrency(currency.getId());
+            currencyDTOList.add(currencyDTO);
+        }
+
+        return currencyDTOList;
     }
 }

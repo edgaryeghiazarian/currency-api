@@ -101,4 +101,15 @@ public class MarketService {
         marketRepository.save(market);
         return MarketDTO.builder().id(market.getId()).name(market.getName()).build();
     }
+
+    public List<MarketDTO> getAllMarkets() {
+        List<MarketDTO> markets = new ArrayList<>();
+        List<Market> marketList = marketRepository.findAll();
+        for (Market market : marketList) {
+            MarketDTO marketDTO = getMarket(market.getId());
+            markets.add(marketDTO);
+        }
+
+        return markets;
+    }
 }

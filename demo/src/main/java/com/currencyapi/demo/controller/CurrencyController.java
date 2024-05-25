@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/currency")
 public class CurrencyController {
@@ -30,6 +32,13 @@ public class CurrencyController {
         CurrencyDTO currency = currencyService.getCurrency(id);
 
         return new ResponseEntity<>(currency, HttpStatus.OK);
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getAllCurrencies() {
+        List<CurrencyDTO> allCurrencies = currencyService.getAllCurrencies();
+
+        return new ResponseEntity<>(allCurrencies, HttpStatus.OK);
     }
 
     @PutMapping("/update")

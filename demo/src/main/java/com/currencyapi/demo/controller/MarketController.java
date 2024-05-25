@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/market")
 public class MarketController {
@@ -31,6 +33,12 @@ public class MarketController {
         MarketDTO market = marketService.getMarket(id);
 
         return new ResponseEntity<>(market, HttpStatus.OK);
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getAllMarkets() {
+        List<MarketDTO> allMarkets = marketService.getAllMarkets();
+        return new ResponseEntity<>(allMarkets, HttpStatus.OK);
     }
 
     @PutMapping("/update")
