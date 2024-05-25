@@ -1,7 +1,7 @@
 package com.currencyapi.demo.service;
 
-import com.currencyapi.demo.entity.CurrencyEnum;
 import com.currencyapi.demo.entity.Currency;
+import com.currencyapi.demo.entity.CurrencyEnum;
 import com.currencyapi.demo.entity.Market;
 import com.currencyapi.demo.model.CurrencyDTO;
 import com.currencyapi.demo.model.ExchangeRequest;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MarketService {
@@ -25,11 +24,8 @@ public class MarketService {
     }
 
     public Market getMarketById(long id) {
-        Optional<Market> marketOptional = marketRepository.findById(id);
-        if (marketOptional.isEmpty()) {
-            throw new RuntimeException("Market not found");
-        }
-        return marketOptional.get();
+        return marketRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("Market not found"));
     }
 
     public MarketDTO getMarket(long id) {
@@ -69,8 +65,8 @@ public class MarketService {
         double amount = exchangeRequest.getAmount();
 
         Currency currentCurrency = getCurrentCurrency(exchangeRequest.getMarketId(), name);
-        int finalAmount = (int) (amount*currentCurrency.getBuyRate());
-        return (int) (Math.ceil(finalAmount/10.0)*10);
+        int finalAmount = (int) (amount * currentCurrency.getBuyRate());
+        return (int) (Math.ceil(finalAmount / 10.0) * 10);
     }
 
     public double exchangeFromAMD(ExchangeRequest exchangeRequest) {

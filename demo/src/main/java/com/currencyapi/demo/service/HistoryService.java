@@ -14,13 +14,10 @@ import java.util.Optional;
 @Service
 public class HistoryService {
     private final HistoryRepository historyRepository;
-//    private final CurrencyService currencyService;
 
-    private final CurrencyRepository currencyRepository;
     @Autowired
-    public HistoryService(HistoryRepository historyRepository, CurrencyRepository currencyRepository) {
+    public HistoryService(HistoryRepository historyRepository) {
         this.historyRepository = historyRepository;
-        this.currencyRepository = currencyRepository;
     }
 
     public History addCurrencyToHistory(Currency currency) {
@@ -53,9 +50,5 @@ public class HistoryService {
                 .id(history.getId())
                 .timestamp(history.getTimestamp()).build();
     }
-//    public void removeCurrencyFromHistory(long historyId, long currencyId) {
-//        Currency currency = currencyService.getCurrencyById(currencyId);
-//        currency.getHistory().remove(getHistoryById(historyId));
-//        currencyRepository.save(currency);
-//    }
+
 }
