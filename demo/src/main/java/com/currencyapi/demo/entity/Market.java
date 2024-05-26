@@ -18,6 +18,6 @@ public class Market {
 
     private String name;
 
-    @OneToMany(mappedBy = "market", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "market", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Currency> currencyList;
 }

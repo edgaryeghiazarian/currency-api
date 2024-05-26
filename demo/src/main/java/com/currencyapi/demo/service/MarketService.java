@@ -95,7 +95,6 @@ public class MarketService {
 
     @Transactional
     public MarketDTO updateMarket(MarketDTO marketDTO) {
-        //todo not tested
         Market market = getMarketById(marketDTO.getId());
         market.setName(market.getName());
         marketRepository.save(market);
@@ -109,7 +108,10 @@ public class MarketService {
             MarketDTO marketDTO = getMarket(market.getId());
             markets.add(marketDTO);
         }
-
         return markets;
+    }
+
+    public void deleteMarket(long marketId) {
+        marketRepository.deleteById(marketId);
     }
 }

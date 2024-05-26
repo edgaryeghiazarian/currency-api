@@ -46,6 +46,12 @@ public class MarketController {
         MarketDTO market = marketService.updateMarket(marketDTO);
         return new ResponseEntity<>(market, HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/{marketId}")
+    public ResponseEntity<?> deleteMarket(@PathVariable long marketId) {
+        marketService.deleteMarket(marketId);
+        return new ResponseEntity<>("Market deleted", HttpStatus.OK);
+    }
     @PostMapping("/exchangeToAMD")
     public ResponseEntity<?> exchangeToAMD(@RequestBody ExchangeRequest exchangeRequest) {
         int exchangeToAMD = marketService.exchangeToAMD(exchangeRequest);

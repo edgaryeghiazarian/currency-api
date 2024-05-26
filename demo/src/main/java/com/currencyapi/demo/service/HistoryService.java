@@ -39,7 +39,6 @@ public class HistoryService {
         return optionalHistory.get();
     }
 
-
     public HistoryDTO getHistory(long id) {
         History history = getHistoryById(id);
         return HistoryDTO.builder()
