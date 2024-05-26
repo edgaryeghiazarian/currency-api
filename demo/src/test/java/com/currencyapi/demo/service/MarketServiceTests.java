@@ -14,12 +14,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MarketServiceTests {
@@ -56,7 +56,7 @@ public class MarketServiceTests {
     }
 
     @Test
-    public void MarketService_GetCurrentCurrency() {
+    public void MarketService_GetCurrentCurrency_ReturnEntity() {
         long marketId = 1L;
         Market market = new Market();
         market.setName("SAS");
@@ -82,7 +82,7 @@ public class MarketServiceTests {
     }
 
     @Test
-    public void MarketService_ExchangeToAMD() {
+    public void MarketService_ExchangeToAMD_ReturnAmount() {
         long marketId = 1L;
         CurrencyEnum currencyName = CurrencyEnum.USD;
         double amount = 20.0;
@@ -111,7 +111,7 @@ public class MarketServiceTests {
     }
 
     @Test
-    public void MarketService_ExchangeFromAMD() {
+    public void MarketService_ExchangeFromAMD_ReturnAmount() {
         long marketId = 1L;
         CurrencyEnum currencyName = CurrencyEnum.USD;
         double amount = 20000.0;
@@ -140,7 +140,7 @@ public class MarketServiceTests {
     }
 
     @Test
-    public void MarketService_ExchangeToAny() {
+    public void MarketService_ExchangeToAny_ReturnAmount() {
         long marketId = 1L;
         CurrencyEnum currencyName1 = CurrencyEnum.USD;
         CurrencyEnum currencyName2 = CurrencyEnum.GEL;
@@ -175,4 +175,29 @@ public class MarketServiceTests {
         Assertions.assertEquals(result, expected);
     }
 
+    @Test
+    public void MarketService_GetAllMarkets_ReturnList() {
+        Market market1 = new Market();
+        market1.setName("SAS");
+        market1.setId(1L);
+        Market market2 = new Market();
+        market2.setName("Tsiran");
+        market2.setId(2L);
+
+        Currency currency = new Currency();
+        currency.setName(CurrencyEnum.USD);
+        market1.setCurrencyList(List.of(currency));
+        market2.setCurrencyList(List.of(currency));
+
+        when(marketRepository.findById(1L)).thenReturn(Optional.ofNullable(market1));
+        when(marketRepository.findById(2L)).thenReturn(Optional.ofNullable(market2));
+
+        when(marketRepository.findAll()).thenReturn(Arrays.asList(market1, market2));
+
+        List<MarketDTO> allMarkets = marketService.getAllMarkets();
+        Assertions.assertNotNull(allMarkets);
+        Assertions.assertEquals(2, allMarkets.size());
+        Assertions.assertEquals(allMarkets.get(0).getName(), market1.getName());
+
+    }
 }

@@ -17,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CurrencyServiceTests {
@@ -33,7 +32,7 @@ public class CurrencyServiceTests {
     private CurrencyService currencyService;
 
     @Test
-    public void CurrencyService_GetCurrencyById() {
+    public void CurrencyService_GetCurrencyById_ReturnEntity() {
         long currencyId = 1L;
         Currency currency = new Currency();
         currency.setName(CurrencyEnum.USD);
@@ -49,7 +48,7 @@ public class CurrencyServiceTests {
     }
 
     @Test
-    public void CurrencyService_AddCurrency() {
+    public void CurrencyService_AddCurrency_ReturnCurrencyDTO() {
         Currency currency = new Currency();
         currency.setName(CurrencyEnum.USD);
         currency.setBuyRate(200.0);
@@ -74,7 +73,7 @@ public class CurrencyServiceTests {
     }
 
     @Test
-    public void CurrencyService_UpdateCurrency() {
+    public void CurrencyService_UpdateCurrency_ReturnCurrencyDTO() {
         Currency currency = new Currency();
         currency.setName(CurrencyEnum.USD);
         currency.setBuyRate(200.0);
@@ -107,7 +106,31 @@ public class CurrencyServiceTests {
         Assertions.assertNotNull(updatedCurrency);
         Assertions.assertEquals(updatedCurrency.getBuyRate(), 300.0);
         Assertions.assertEquals(updatedCurrency.getSellRate(), 350.0);
+    }
 
+    @Test
+    public void CurrencyService_GetAllCurrencies_ReturnList() {
+        Currency currency1 = new Currency();
+        currency1.setName(CurrencyEnum.USD);
+        currency1.setId(1L);
+        Currency currency2 = new Currency();
+        currency2.setId(2L);
+        currency2.setName(CurrencyEnum.EUR);
 
+        Market market = new Market();
+        market.setId(4L);
+        currency1.setMarket(market);
+        currency2.setMarket(market);
+
+        when(currencyRepository.findById(1L)).thenReturn(Optional.ofNullable(currency1));
+        when(currencyRepository.findById(2L)).thenReturn(Optional.ofNullable(currency2));
+
+        when(currencyRepository.findAll()).thenReturn(List.of(currency1, currency2));
+
+        List<CurrencyDTO> allCurrencies = currencyService.getAllCurrencies();
+
+        Assertions.assertNotNull(allCurrencies);
+        Assertions.assertEquals(2, allCurrencies.size());
+        Assertions.assertEquals(allCurrencies.get(0).getName(), currency1.getName());
     }
 }

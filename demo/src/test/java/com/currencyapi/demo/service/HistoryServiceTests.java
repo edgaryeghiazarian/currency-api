@@ -25,7 +25,7 @@ public class HistoryServiceTests {
     private HistoryService historyService;
 
     @Test
-    public void HistoryService_GetHistoryById(){
+    public void HistoryService_GetHistoryById_ReturnEntity(){
         History history = new History();
         history.setBuyRate(20.0);
         history.setSellRate(25.0);
@@ -39,7 +39,7 @@ public class HistoryServiceTests {
     }
 
     @Test
-    public void HistoryService_AddCurrencyToHistory() {
+    public void HistoryService_AddCurrencyToHistory_ReturnHistoryEntity() {
         History history = new History();
         history.setBuyRate(20.0);
         history.setSellRate(25.0);
